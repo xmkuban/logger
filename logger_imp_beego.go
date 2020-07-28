@@ -9,7 +9,7 @@ import (
 
 	"time"
 
-	"git.ikuban.com/server/until-repository/logger/beego/logs"
+	"github.com/xmkuban/logger/beego/logs"
 )
 
 func InitBeegoLogByConsole(level int) {

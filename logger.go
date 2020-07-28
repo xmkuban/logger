@@ -1,15 +1,9 @@
 package logger
 
 import (
-	//"os"
-	//"path/filepath"
-	//"sync"
-
-	//l4g "git.ikuban.com/server/until-repository/log4go"
 	"io"
 
 	"github.com/go-sql-driver/mysql"
-	//"github.com/robscc/mysql"
 )
 
 func SetLogger(log LoggerInterface) {

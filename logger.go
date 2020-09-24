@@ -21,7 +21,7 @@ func initDefaultLog() {
 // Debugf formats message according to format specifier
 // and writes to log with level = Debug.
 func Debugf(format string, params ...interface{}) {
-	if CurrLogger != nil {
+	if CurrLogger == nil {
 		initDefaultLog()
 	}
 	CurrLogger.Debugf(format, params...)
@@ -30,7 +30,7 @@ func Debugf(format string, params ...interface{}) {
 // Infof formats message according to format specifier
 // and writes to log with level = Info.
 func Infof(format string, params ...interface{}) {
-	if CurrLogger != nil {
+	if CurrLogger == nil {
 		initDefaultLog()
 	}
 	CurrLogger.Infof(format, params...)
@@ -39,7 +39,7 @@ func Infof(format string, params ...interface{}) {
 // Warnf formats message according to format specifier
 // and writes to log with level = Warn.
 func Warnf(format string, params ...interface{}) {
-	if CurrLogger != nil {
+	if CurrLogger == nil {
 		initDefaultLog()
 	}
 	CurrLogger.Warnf(format, params...)
@@ -48,7 +48,7 @@ func Warnf(format string, params ...interface{}) {
 // Errorf formats message according to format specifier
 // and writes to log with level = Error.
 func Errorf(format string, params ...interface{}) {
-	if CurrLogger != nil {
+	if CurrLogger == nil {
 		initDefaultLog()
 	}
 	CurrLogger.Errorf(format, params...)
@@ -57,7 +57,7 @@ func Errorf(format string, params ...interface{}) {
 // Debug formats message using the default formats for its operands
 // and writes to log with level = Debug
 func Debug(v ...interface{}) {
-	if CurrLogger != nil {
+	if CurrLogger == nil {
 		initDefaultLog()
 	}
 	CurrLogger.Debug(v...)
@@ -66,7 +66,7 @@ func Debug(v ...interface{}) {
 // Info formats message using the default formats for its operands
 // and writes to log with level = Info
 func Info(v ...interface{}) {
-	if CurrLogger != nil {
+	if CurrLogger == nil {
 		initDefaultLog()
 	}
 	CurrLogger.Info(v...)
@@ -75,7 +75,7 @@ func Info(v ...interface{}) {
 // Warn formats message using the default formats for its operands
 // and writes to log with level = Warn
 func Warn(v ...interface{}) {
-	if CurrLogger != nil {
+	if CurrLogger == nil {
 		CurrLogger.Warn(v...)
 	}
 }
@@ -83,7 +83,7 @@ func Warn(v ...interface{}) {
 // Error formats message using the default formats for its operands
 // and writes to log with level = Error
 func Error(v ...interface{}) {
-	if CurrLogger != nil {
+	if CurrLogger == nil {
 		initDefaultLog()
 	}
 	CurrLogger.Error(v...)
@@ -93,7 +93,7 @@ type mysqlLogger struct{}
 
 func (l *mysqlLogger) Print(v ...interface{}) {
 
-	if CurrLogger != nil {
+	if CurrLogger == nil {
 		initDefaultLog()
 	}
 	if len(v) == 1 {

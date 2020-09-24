@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"io"
+	"sync"
 
 	"github.com/go-sql-driver/mysql"
 )
@@ -10,82 +10,66 @@ func SetLogger(log LoggerInterface) {
 	CurrLogger = log
 }
 
-func init() {
-	InitBeegoLogByConsole(7)
-	//InitSeelog()
-	//SetLogger(SeeLogger)
-}
+var onceDo = sync.Once{}
 
-// Tracef formats message according to format specifier
-// and writes to log with level = Trace.
-func Tracef(format string, params ...interface{}) {
-	if CurrLogger != nil {
-		CurrLogger.Tracef(format, params...)
-	}
+func initDefaultLog() {
+	onceDo.Do(func() {
+		InitBeegoLogByConsole(7)
+	})
 }
 
 // Debugf formats message according to format specifier
 // and writes to log with level = Debug.
 func Debugf(format string, params ...interface{}) {
 	if CurrLogger != nil {
-		CurrLogger.Debugf(format, params...)
+		initDefaultLog()
 	}
+	CurrLogger.Debugf(format, params...)
 }
 
 // Infof formats message according to format specifier
 // and writes to log with level = Info.
 func Infof(format string, params ...interface{}) {
 	if CurrLogger != nil {
-		CurrLogger.Infof(format, params...)
+		initDefaultLog()
 	}
+	CurrLogger.Infof(format, params...)
 }
 
 // Warnf formats message according to format specifier
 // and writes to log with level = Warn.
 func Warnf(format string, params ...interface{}) {
 	if CurrLogger != nil {
-		CurrLogger.Warnf(format, params...)
+		initDefaultLog()
 	}
+	CurrLogger.Warnf(format, params...)
 }
 
 // Errorf formats message according to format specifier
 // and writes to log with level = Error.
 func Errorf(format string, params ...interface{}) {
 	if CurrLogger != nil {
-		CurrLogger.Errorf(format, params...)
+		initDefaultLog()
 	}
-}
-
-// Criticalf formats message according to format specifier
-// and writes to log with level = Critical.
-func Criticalf(format string, params ...interface{}) {
-	if CurrLogger != nil {
-		CurrLogger.Criticalf(format, params...)
-	}
-}
-
-// Trace formats message using the default formats for its operands
-// and writes to log with level = Trace
-func Trace(v ...interface{}) {
-	if CurrLogger != nil {
-		CurrLogger.Trace(v...)
-	}
+	CurrLogger.Errorf(format, params...)
 }
 
 // Debug formats message using the default formats for its operands
 // and writes to log with level = Debug
 func Debug(v ...interface{}) {
 	if CurrLogger != nil {
-		CurrLogger.Debug(v...)
+		initDefaultLog()
 	}
+	CurrLogger.Debug(v...)
 }
 
 // Info formats message using the default formats for its operands
 // and writes to log with level = Info
 func Info(v ...interface{}) {
 	if CurrLogger != nil {
-		CurrLogger.Info(v...)
+		initDefaultLog()
 	}
+	CurrLogger.Info(v...)
 }
 
 // Warn formats message using the default formats for its operands
@@ -100,27 +84,9 @@ func Warn(v ...interface{}) {
 // and writes to log with level = Error
 func Error(v ...interface{}) {
 	if CurrLogger != nil {
-		CurrLogger.Error(v...)
+		initDefaultLog()
 	}
-}
-
-// Critical formats message using the default formats for its operands
-// and writes to log with level = Critical
-func Critical(v ...interface{}) {
-	if CurrLogger != nil {
-		CurrLogger.Critical(v...)
-	}
-}
-
-type iowriter struct{}
-
-func (w *iowriter) Write(p []byte) (n int, err error) {
-	CurrLogger.Debugf("iowriter:%s", p)
-	return len(p), nil
-}
-
-func GetDebugIOWriter() io.Writer {
-	return &iowriter{}
+	CurrLogger.Error(v...)
 }
 
 type mysqlLogger struct{}
@@ -128,11 +94,12 @@ type mysqlLogger struct{}
 func (l *mysqlLogger) Print(v ...interface{}) {
 
 	if CurrLogger != nil {
-		if len(v) == 1 {
-			CurrLogger.Error(v...)
-		} else {
-			CurrLogger.Errorf(v[0].(string), v[1:]...)
-		}
+		initDefaultLog()
+	}
+	if len(v) == 1 {
+		CurrLogger.Error(v...)
+	} else {
+		CurrLogger.Errorf(v[0].(string), v[1:]...)
 	}
 }
 

@@ -76,8 +76,9 @@ func Info(v ...interface{}) {
 // and writes to log with level = Warn
 func Warn(v ...interface{}) {
 	if CurrLogger == nil {
-		CurrLogger.Warn(v...)
+		initDefaultLog()
 	}
+	CurrLogger.Warn(v...)
 }
 
 // Error formats message using the default formats for its operands
